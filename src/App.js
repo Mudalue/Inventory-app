@@ -1,23 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Container from "./components/container/Container";
+import AllMachine from "./components/pages/AllMachine";
+import { Routes, Route } from "react-router-dom";
+import SubMachine from "./components/pages/SubMachine";
+import Setting from "./components/pages/Setting";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        <Route path="/" element={<Container />}>
+          <Route index element={<AllMachine />} />
+          <Route path="home" element={<AllMachine />} />
+          <Route path="sub-category" element={<SubMachine />} />
+          <Route path="settings" element={<Setting />} />
+        </Route>
+      </Routes>
     </div>
   );
 }
