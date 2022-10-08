@@ -3,7 +3,7 @@ import { AppContext } from "../../context/AppContext";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  const [machineTypes, setMachineTypes] = useContext(AppContext);
+  const [category, setCategory] = useContext(AppContext);
 
   return (
     <>

@@ -12,7 +12,7 @@ function App() {
         <Route path="/" element={<Container />}>
           <Route index element={<AllMachine />} />
           <Route path="home" element={<AllMachine />} />
-          <Route path="sub-category" element={<SubMachine />} />
+          <Route path="type/:name" element={<SubMachine />} />
           <Route path="settings" element={<Setting />} />
         </Route>
       </Routes>

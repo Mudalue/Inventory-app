@@ -1,46 +1,98 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
+import { InputField } from "../ui/atoms/InputField";
+import { useNavigate } from "react-router-dom";
 import Card from "../ui/molecules/Card";
+import { getStorageValue } from "../utils/memory";
+
 
 const AllMachine = () => {
-  const [machineTypes, setMachineTypes] = useContext(AppContext);
-  const [id, setid] = useState(0);
+  const [category, setCategory] = useContext(AppContext);
+  const [show, setShow] = useState(false);
+  const [allItem, setAllItem] = useState([]);
+  const [prop, setProp] = useState([])
+  let navigate = useNavigate();
+//get All items
+const getAll = () => {
+ const items = getStorageValue("All");
+ console.log(items)
+ let test = items.map((d)=> setProp(d.field));
+ console.log(test)
+ setAllItem(items)
+}
 
-  //post machine type
+  useEffect(() => {
+    getAll();
+    // category.map((d) => setfields(d.field));
+  }, []);
+  console.log(prop);
 
-  const postMachineData = () => {
-    let data = [...machineTypes];
-    data.push({
-      id: 1,
-      machinetype: "Crane",
-      title: "small but mighty",
-      type: "electric",
-      brand: "toshiba",
-      weight: "20",
-      quantity: 40,
-      date: "12/05/2017",
-    });
-    setMachineTypes(data);
-  };
-  console.log(machineTypes);
   return (
     <>
-      <div className="container">
+      <div className="container-fluid">
         <div className="row">
-          <div className="col-md-12">
-            <div className="text-end">
-              <button onClick={postMachineData}>Add Item </button>
-            </div>
+          <div>
+          <h5 className="fw-bold">Category</h5>
+          <div>
+            {category.map((item) => (
+              <>
+                <div className="col-md-3">
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() =>
+                      navigate(`type/${item.objectType}`, { replace: true })
+                    }
+                  >
+                    {item.objectType}
+                  </button>
+                </div>
+              </>
+            ))}
           </div>
         </div>
+        </div>
+
         <div className="row">
-          {machineTypes.map((machinetype) => (
+          <>
+            {allItem.length === 0 ? (
+              <><p>No item available!!!</p></>
+            ) : (
+              <>
+                {allItem.map((all) => (
+                  <>
+                    <div className="col-md-4">
+                      <div className="card">
+                            <p>{all.objectType}</p>
+                            <p>{all.title}</p>
+                            <div>
+                              <p>properties</p>
+                              {
+                                prop.map((p)=> (<><p>{p}</p></>))
+                              }
+                            </div>
+                      </div>
+                
+                    </div>
+                  </>
+                ))}
+              </>
+            )}
+          </>
+          {show && (
             <>
-              <div className="col-md-3">
-                <Card name={machinetype.machinetype} />
-              </div>
+              {category.map((item) => (
+                <>
+                  <div className="col-md-4">
+                    <Card
+                      name={item.objectType}
+                      title={item.title}
+                      data={item.field}
+                    />
+                  </div>
+                </>
+              ))}
             </>
-          ))}
+          )}
         </div>
       </div>
     </>

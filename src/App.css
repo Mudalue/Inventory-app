@@ -30,3 +30,10 @@ input[type=date]{
     color: gray !important;
     font-size: 13px;
 }
+.card{
+    padding: 10px;
+}
+p{
+    font-size: 13px;
+    line-height: 0;
+}

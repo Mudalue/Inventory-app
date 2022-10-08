@@ -28,6 +28,7 @@ export const InputField = ({
             boxShadow: "none",
             backgroundColor: `${background}`,
             margin: 0,
+            fontSize: 13
           }}
           required={required}
         />
