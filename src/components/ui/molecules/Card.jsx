@@ -8,7 +8,7 @@ const Card = ({ name, title, data }) => {
   function handleChange(i, e) {
     e.preventDefault();
     const values = [...fields];
-    values[i][e.target.name] =  e.target.value;
+    values[i] =  e.target.value;
     setFields(values);
   }
   const submit = () => {

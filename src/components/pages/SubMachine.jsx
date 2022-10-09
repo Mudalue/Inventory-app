@@ -16,7 +16,7 @@ const SubMachine = () => {
   const getAll = () => {
     const items = getStorageValue("All");
     console.log(items);
-    let test = items.filter((item) => item.ObjectType !== name);
+    let test = items.filter((item) => {return item.objectType === name});
     console.log(test);
     setSubItem(test);
   };
