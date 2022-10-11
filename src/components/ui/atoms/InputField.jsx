@@ -8,6 +8,7 @@ export const InputField = ({
   handleChange,
   value,
   background,
+  defaultvalue,
   required,
 }) => {
   return (
@@ -19,7 +20,9 @@ export const InputField = ({
           </label>
         )}
         <input
-        className="form-control"
+        name={name}
+          className="form-control"
+          defaultValue={defaultvalue}
           value={value}
           placeholder={placeholder}
           type={type}
@@ -28,7 +31,7 @@ export const InputField = ({
             boxShadow: "none",
             backgroundColor: `${background}`,
             margin: 0,
-            fontSize: 13
+            fontSize: 13,
           }}
           required={required}
         />

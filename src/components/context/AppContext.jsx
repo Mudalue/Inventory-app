@@ -5,25 +5,23 @@ import { useLocalStorage } from "../utils/memory";
 export const AppContext = createContext();
 
 export const Provider = (props) => {
-
-//   const [objectType, setObjectType] = useLocalStorage("object-type", []);
   const [category, setCategory] = useLocalStorage("category", []);
-//   const [all, setAll] = useLocalStorage("All", [])
-//   useEffect(() => {
-//     let response = getStorageValue("All", []);
-//     console.log(response);
-//     setAll(response);
-//   }, []);
 
   useEffect(() => {
-    let data = getStorageValue("category", []);
-    console.log(data);
-    setCategory(data);
+    try {
+      let data = getStorageValue("category", []);
+      if (data === null) {
+        localStorage.setItem("category", JSON.stringify([]));
+      } else {
+        setCategory(data);
+        console.log(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
   return (
-    <AppContext.Provider
-      value={[category, setCategory]}
-    >
+    <AppContext.Provider value={[category, setCategory]}>
       {props.children}
     </AppContext.Provider>
   );

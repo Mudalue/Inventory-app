@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { InputField } from "../atoms/InputField";
 import { useLocalStorage } from "../../utils/memory";
 const Card = ({ name, title, data }) => {
   const [fields, setFields] = useState([]);
-  const [all, setAll] = useLocalStorage("All", [])
+  const [all, setAll] = useLocalStorage("All", []);
+  // const [inputName, setInputName] = useState("");
+  // const [inputVAlue, setInputValue] = useState("");
 
-  function handleChange(i, e) {
+  function handleChange(e, key) {
     e.preventDefault();
-    const values = [...fields];
-    values[i] =  e.target.value;
+    const values = { ...fields };
+    values[key] = e.target.value;
     setFields(values);
+    console.log(fields);
   }
-  const submit = () => {
+  const submit = (e) => {
     const data = [...all];
     data.push({
       objectType: name,
@@ -22,6 +25,14 @@ const Card = ({ name, title, data }) => {
   };
   console.log(all);
   console.log(fields);
+  // useEffect(() => {
+  //   all.map((d) => {
+  //     let field = d.field;
+  //     setInputName(Object.keys(field));
+  //     setInputValue(Object.values(field))
+  //   });
+  // }, []);
+
   return (
     <>
       <div className="card">
@@ -39,14 +50,19 @@ const Card = ({ name, title, data }) => {
                   <InputField
                     name={fields.value}
                     type={fields.type}
-                    handleChange={(e) => handleChange(idx, e, fields.value)}
+                    handleChange={(e) => handleChange(e, fields.value)}
                   />
                 </div>
               </div>
             ))}
             <div className="row" style={{ marginTop: 20 }}>
               <div className="col-md-12">
-                <button className="btn btn-dark w-100" onClick={submit}>Add to Inventory</button>
+                <button
+                  className="btn btn-dark w-100"
+                  onClick={(e) => submit(e)}
+                >
+                  Add to Inventory
+                </button>
               </div>
             </div>
           </form>

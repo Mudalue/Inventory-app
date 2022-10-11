@@ -1,41 +1,44 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { InputField } from "../ui/atoms/InputField";
 import Checkbox from "../ui/atoms/Checkbox";
-import { useLocalStorage } from "../utils/memory";
-import Card from "../ui/molecules/Card";
 
 const Setting = () => {
   const [category, setCategory] = useContext(AppContext);
-  //   const [category, setCategory] = useContext(AppContext);
-  const [fields, setFields] = useState([{ value: "", type: "text" }]);
-  const [objectType, setObjectType] = useLocalStorage("object-type", []);
+  const [fields, setFields] = useState([{ value: "", type: "text", name: "" }]);
+  const [updateFields, setUpdateFields] = useState([
+    { value: "", type: "text" },
+  ]);
   const [item, setItem] = useState("");
   const [title, setTitle] = useState("");
   const [show, setShow] = useState(false);
+  const [input, setInput] = useState([]);
+  const [updateItem, setUpdateItem] = useState("");
+  const [updateTitle, setUpdateTitle] = useState("");
   //set object values
   const addObjectType = () => {
     setShow(!show);
   };
 
-  function handleChange(i, e) {
-    const values = [...fields];
+  function handleChange(i, e, data, setData) {
+    const values = [...data];
     values[i].value = e.target.value;
-    setFields(values);
+    values[i].name = "";
+    setData(values);
   }
 
-  function handleAdd(type) {
-    const values = [...fields];
-    values.push({ value: "", type: type });
-    setFields(values);
+  function handleAdd(type, data, setData) {
+    const values = [...data];
+    values.push({ value: "", type: type, name: "" });
+    // setFields(values);
+    setData(values);
   }
-
-  function handleRemove(i) {
-    const values = [...fields];
+  function handleRemove(i, data, setData) {
+    const values = [...data];
     values.splice(i, 1);
-    setFields(values);
+    setData(values);
   }
-
+  //submit
   const submit = () => {
     const data = [...category];
     data.push({
@@ -44,8 +47,27 @@ const Setting = () => {
       field: fields,
     });
     setCategory(data);
+    window.location.reload();
   };
   console.log(category);
+
+  //remove
+  const remove = (objectname) => {
+    let value = objectname;
+    const arr = [...category];
+    const items = arr.filter((item) => item.objectType !== value);
+    setCategory(items);
+  };
+  //update
+  // const update = (name) => {
+
+  // };
+  // useEffect(() => {
+  //   category.map((c) => console.log(c.field));
+  // }, []);
+  console.log(updateFields);
+  console.log(updateItem);
+  console.log(updateTitle);
   return (
     <>
       <div className="container-fluid">
@@ -59,7 +81,7 @@ const Setting = () => {
           </div>
         </div>
         <div className="row">
-          {category.length === 0 ? (
+          {category === null ? (
             <>
               <p style={{ fontSize: 16 }} className="text-danger">
                 no item available!!
@@ -74,17 +96,28 @@ const Setting = () => {
                       className="card"
                       style={{ padding: 20, margin: 5, width: "100%" }}
                     >
-                      <form onSubmit={submit}>
+                      <div className="text-end">
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => remove(categories.objectType)}
+                        >
+                          x
+                        </button>
+                      </div>
+                      <form>
                         <div className="d-flex justify-content-between">
-                          <h6 className="fw-bold">object type</h6>
+                          <h6 className="fw-bold">{categories.objectType}</h6>
                         </div>
                         <hr />
                         <div className="row">
                           <div className="col-md-12">
                             <InputField
-                              name="Object type"
+                              name="Machine name"
                               placeholder="object type"
-                              handleChange={(e) => e.target.value}
+                              handleChange={({ target: { value } }) =>
+                                setUpdateItem(value)
+                              }
+                              defaultvalue={categories.objectType}
                             />
                           </div>
                         </div>
@@ -93,13 +126,40 @@ const Setting = () => {
                             <InputField
                               name="Title"
                               placeholder="title"
-                              handleChange={(e) => e.target.value}
+                              handleChange={({ target: { value } }) =>
+                                setUpdateTitle(value)
+                              }
+                              defaultvalue={categories.title}
                             />
                           </div>
                         </div>
                         <div className="row">
+                          {categories.field.map((field, idx) => {
+                            return (
+                              <>
+                                <InputField
+                                  name={field.value}
+                                  value={field.value}
+                                  key={idx}
+                                  type={field.type}
+                                  defaultvalue={field.value}
+                                  handleChange={(e) =>
+                                    handleChange(
+                                      idx,
+                                      e,
+                                      updateFields,
+                                      setUpdateFields
+                                    )
+                                  }
+                                />
+                              </>
+                            );
+                          })}
+                        </div>
+
+                        <div className="row">
                           <p style={{ marginTop: 10, fontSize: 13 }}>Fields</p>
-                          {categories.fields.map((field, idx) => {
+                          {updateFields.map((field, idx) => {
                             return (
                               <div className="col-md-12">
                                 <div key={`${field}-${idx}`}>
@@ -108,42 +168,70 @@ const Setting = () => {
                                       case "text":
                                         return (
                                           <InputField
+                                            name={field.value}
+                                            value={field.value}
                                             type="text"
                                             placeholder="enter text"
                                             handleChange={(e) =>
-                                              handleChange(idx, e)
+                                              handleChange(
+                                                idx,
+                                                e,
+                                                updateFields,
+                                                setUpdateFields
+                                              )
                                             }
                                           />
                                         );
                                       case "checkbox":
-                                        return <Checkbox />;
+                                        return <Checkbox name={field.value} />;
                                       case "number":
                                         return (
                                           <InputField
+                                            name={field.value}
                                             type="number"
+                                            value={field.value}
                                             placeholder="enter number"
                                             handleChange={(e) =>
-                                              handleChange(idx, e)
+                                              handleChange(
+                                                idx,
+                                                e,
+                                                updateFields,
+                                                setUpdateFields
+                                              )
                                             }
                                           />
                                         );
                                       case "date":
                                         return (
                                           <InputField
+                                            value={field.value}
+                                            name={field.value}
                                             type="date"
                                             placeholder="dd-mm-yyyy"
                                             handleChange={(e) =>
-                                              handleChange(idx, e)
+                                              handleChange(
+                                                idx,
+                                                e,
+                                                updateFields,
+                                                setUpdateFields
+                                              )
                                             }
                                           />
                                         );
                                       default:
                                         return (
                                           <InputField
+                                            value={field.value}
+                                            name={field.value}
                                             type="text"
                                             placeholder="enter text"
                                             handleChange={(e) =>
-                                              handleChange(idx, e)
+                                              handleChange(
+                                                idx,
+                                                e,
+                                                updateFields,
+                                                setUpdateFields
+                                              )
                                             }
                                           />
                                         );
@@ -151,7 +239,13 @@ const Setting = () => {
                                   })()}
                                   <button
                                     type="button"
-                                    onClick={() => handleRemove(idx)}
+                                    onClick={() =>
+                                      handleRemove(
+                                        idx,
+                                        updateFields,
+                                        setUpdateFields
+                                      )
+                                    }
                                     className="text-danger"
                                     style={{
                                       border: "none",
@@ -170,28 +264,44 @@ const Setting = () => {
                           >
                             <button
                               type="button"
-                              onClick={() => handleAdd("text")}
+                              onClick={() =>
+                                handleAdd("text", updateFields, setUpdateFields)
+                              }
                               className="btn btn-secondary"
                             >
                               text
                             </button>
                             <button
                               type="button"
-                              onClick={() => handleAdd("checkbox")}
+                              onClick={() =>
+                                handleAdd(
+                                  "checkbox",
+                                  updateFields,
+                                  setUpdateFields
+                                )
+                              }
                               className="btn btn-secondary"
                             >
                               checkbox
                             </button>
                             <button
                               type="button"
-                              onClick={() => handleAdd("number")}
+                              onClick={() =>
+                                handleAdd(
+                                  "number",
+                                  updateFields,
+                                  setUpdateFields
+                                )
+                              }
                               className="btn btn-secondary"
                             >
                               number
                             </button>
                             <button
                               type="button"
-                              onClick={() => handleAdd("date")}
+                              onClick={() =>
+                                handleAdd("date", updateFields, setUpdateFields)
+                              }
                               className="btn btn-secondary btn-sm"
                             >
                               date
@@ -203,9 +313,27 @@ const Setting = () => {
                             <button
                               type="button"
                               className="btn btn-dark w-100 py-2 mt-2"
-                              onClick={submit}
+                              onClick={() => {
+                                let arr = [...category];
+                                let index = arr.findIndex(
+                                  (_index) =>
+                                    _index.objectType === categories.objectType
+                                );
+                                console.log(index);
+                                const getItem = arr.filter(
+                                  (obj) =>
+                                    obj.objectType === categories.objectType
+                                );
+                                console.log(getItem)
+                                let update = getItem[0];
+                                update.objectType = updateItem;
+                                update.title = updateTitle;
+                                update.field = updateFields;
+                                arr[index] = update;console.log(update)
+                                // setCategory(update);
+                              }}
                             >
-                              submit
+                              update
                             </button>
                           </div>
                         </div>
@@ -262,10 +390,16 @@ const Setting = () => {
                                     case "text":
                                       return (
                                         <InputField
+                                          name={field.value}
                                           type="text"
                                           placeholder="enter text"
                                           handleChange={(e) =>
-                                            handleChange(idx, e)
+                                            handleChange(
+                                              idx,
+                                              e,
+                                              fields,
+                                              setFields
+                                            )
                                           }
                                         />
                                       );
@@ -274,30 +408,48 @@ const Setting = () => {
                                     case "number":
                                       return (
                                         <InputField
+                                          name={field.value}
                                           type="number"
                                           placeholder="enter number"
                                           handleChange={(e) =>
-                                            handleChange(idx, e)
+                                            handleChange(
+                                              idx,
+                                              e,
+                                              fields,
+                                              setFields
+                                            )
                                           }
                                         />
                                       );
                                     case "date":
                                       return (
                                         <InputField
+                                          name={field.value}
                                           type="date"
                                           placeholder="dd-mm-yyyy"
                                           handleChange={(e) =>
-                                            handleChange(idx, e)
+                                            handleChange(
+                                              idx,
+                                              e,
+                                              fields,
+                                              setFields
+                                            )
                                           }
                                         />
                                       );
                                     default:
                                       return (
                                         <InputField
+                                          name={field.value}
                                           type="text"
                                           placeholder="enter text"
                                           handleChange={(e) =>
-                                            handleChange(idx, e)
+                                            handleChange(
+                                              idx,
+                                              e,
+                                              fields,
+                                              setFields
+                                            )
                                           }
                                         />
                                       );
@@ -305,7 +457,9 @@ const Setting = () => {
                                 })()}
                                 <button
                                   type="button"
-                                  onClick={() => handleRemove(idx)}
+                                  onClick={() =>
+                                    handleRemove(idx, fields, setFields)
+                                  }
                                   className="text-danger"
                                   style={{
                                     border: "none",
@@ -324,28 +478,32 @@ const Setting = () => {
                         >
                           <button
                             type="button"
-                            onClick={() => handleAdd("text")}
+                            onClick={() => handleAdd("text", fields, setFields)}
                             className="btn btn-secondary"
                           >
                             text
                           </button>
                           <button
                             type="button"
-                            onClick={() => handleAdd("checkbox")}
+                            onClick={() =>
+                              handleAdd("checkbox", fields, setFields)
+                            }
                             className="btn btn-secondary"
                           >
                             checkbox
                           </button>
                           <button
                             type="button"
-                            onClick={() => handleAdd("number")}
+                            onClick={() =>
+                              handleAdd("number", fields, setFields)
+                            }
                             className="btn btn-secondary"
                           >
                             number
                           </button>
                           <button
                             type="button"
-                            onClick={() => handleAdd("date")}
+                            onClick={() => handleAdd("date", fields, setFields)}
                             className="btn btn-secondary btn-sm"
                           >
                             date
@@ -359,7 +517,7 @@ const Setting = () => {
                             className="btn btn-dark w-100 py-2 mt-2"
                             onClick={submit}
                           >
-                            submit
+                            Add to Inventory
                           </button>
                         </div>
                       </div>

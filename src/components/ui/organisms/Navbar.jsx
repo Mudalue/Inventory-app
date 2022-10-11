@@ -1,16 +1,14 @@
-import React, { useContext } from "react";
-import { AppContext } from "../../context/AppContext";
+import React from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  const [category, setCategory] = useContext(AppContext);
 
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
-          <a className="navbar-brand text-dark" href="#0">
-            Navbar
+          <a className="navbar-brand text-warning fw-bold" href="#0">
+            Inventory
           </a>
           <button
             className="navbar-toggler"
@@ -26,20 +24,15 @@ const Navbar = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
               <li class="nav-item">
-                <Link class="nav-link active" to="/">
+                <Link class="nav-link active fw-bold text-secondary" to="/">
                    All
                 </Link>
               </li>
               <li class="nav-item">
-                <Link class="nav-link active" to="settings">
+                <Link class="nav-link  fw-bold text-secondary" to="settings">
                    Settings
                 </Link>
               </li>
-              {/* {machineTypes.map((machinetype) => (
-                <Link className="nav-item" to="/">
-                    {machinetype.name}
-                </Link>
-              ))} */}
             </ul>
           </div>
         </div>

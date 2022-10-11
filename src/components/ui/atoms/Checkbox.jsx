@@ -1,6 +1,6 @@
 import React from "react";
 
-const Checkbox = () => {
+const Checkbox = ({name}) => {
   return (
     <>
       <div class="form-check">
@@ -11,7 +11,7 @@ const Checkbox = () => {
           id="flexCheckDefault"
         />
         <label className="form-check-label" for="flexCheckDefault">
-          Default checkbox
+          name
         </label>
       </div>
     </>
