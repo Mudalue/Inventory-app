@@ -46,7 +46,7 @@ const SubMachine = () => {
                 className="d-flex justify-content-between"
                 style={{ marginTop: 20 }}
               >
-                <p>{name}</p>
+                <h5 className="fw-bold">{name}</h5>
                 <button
                   onClick={() => setShow(!show)}
                   className="btn btn-success"
@@ -54,7 +54,6 @@ const SubMachine = () => {
                   Add Item{" "}
                 </button>
               </div>
-              
             </div>
           </div>
           <div className="row">
@@ -70,19 +69,22 @@ const SubMachine = () => {
                   {subItem.map((all) => (
                     <>
                       <div className="col-md-4">
-                        <div className="card">
-                          <p>{all.objectType}</p>
-                          <p>{all.title}</p>
+                        <div
+                          className="card"
+                          style={{ padding: 30, margin: 5 }}
+                        >
                           <div>
-                            <p>properties</p>
-                            {/* {prop.map((p) => (
-                              <>
-                                <p>{p}</p>
-                              </>
-                            ))} */}
+                            <h6 className="fw-bold">{all.objectType}</h6>
+                            <p className="text-secondary">Title: {all.title}</p>
+                          </div>
+                          <hr />
+                          <div>
+                            <h6 className="fw-bold">Properties</h6>
+                            <p className="text-danger text-center">
+                              need help here!!!
+                            </p>
                           </div>
                         </div>
-                        
                       </div>
                     </>
                   ))}
@@ -90,20 +92,20 @@ const SubMachine = () => {
               )}
             </>
             {show && (
-                <>
-                  {formfield.map((item) => (
-                    <>
-                      <div className="col-md-4">
-                        <Card
-                          name={item.objectType}
-                          title={item.title}
-                          data={item.field}
-                        />
-                      </div>
-                    </>
-                  ))}
-                </>
-              )}
+              <>
+                {formfield.map((item) => (
+                  <>
+                    <div className="col-md-4">
+                      <Card
+                        name={item.objectType}
+                        title={item.title}
+                        data={item.field}
+                      />
+                    </div>
+                  </>
+                ))}
+              </>
+            )}
           </div>
         </div>
       }

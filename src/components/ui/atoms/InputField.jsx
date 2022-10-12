@@ -10,6 +10,7 @@ export const InputField = ({
   background,
   defaultvalue,
   required,
+  readonly
 }) => {
   return (
     <>
@@ -34,6 +35,7 @@ export const InputField = ({
             fontSize: 13,
           }}
           required={required}
+          readOnly={readonly}
         />
       </div>
     </>

@@ -4,8 +4,7 @@ import { useLocalStorage } from "../../utils/memory";
 const Card = ({ name, title, data }) => {
   const [fields, setFields] = useState([]);
   const [all, setAll] = useLocalStorage("All", []);
-  // const [inputName, setInputName] = useState("");
-  // const [inputVAlue, setInputValue] = useState("");
+
 
   function handleChange(e, key) {
     e.preventDefault();

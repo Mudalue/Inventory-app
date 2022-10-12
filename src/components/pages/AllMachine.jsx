@@ -1,19 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { InputField } from "../ui/atoms/InputField";
 import { useNavigate } from "react-router-dom";
 import Card from "../ui/molecules/Card";
-import { getStorageValue, useLocalStorage } from "../utils/memory";
+import { getStorageValue } from "../utils/memory";
 
 const AllMachine = () => {
   const [category, setCategory] = useContext(AppContext);
   const [show, setShow] = useState(false);
-  const [allItem, setAllItem] = useLocalStorage([]);
   const [allInventory, setAllInventory] = useState([]);
   const [prop, setProp] = useState([]);
-  const [value, setValue] = useState([]);
-  const [inputName, setInputName] = useState([]);
-  const [inputValue, setInputValue] = useState("");
+
   let navigate = useNavigate();
   //get All items
   const getAll = () => {
@@ -30,7 +26,7 @@ const AllMachine = () => {
     if (category === null) {
       console.log("no category");
     } else {
-      category.map((d)=> setProp(d.field))
+      category.map((d) => setProp(d.field));
     }
   }, []);
   // useEffect(() => {
@@ -95,21 +91,15 @@ const AllMachine = () => {
                 {allInventory.map((all) => (
                   <>
                     <div className="col-md-4">
-                      <div className="card">
-                        <p>{all.objectType}</p>
-                        <p>{all.title}</p>
+                      <div className="card" style={{ padding: 30, margin: 5 }}>
                         <div>
-                          <p>properties</p>
-                          {prop.map((p, i, e) => (
-                            <>
-                              {/* <InputField
-                              name={p[i][ke]}
-                                value={p[i]}
-                                type={p.type}
-                              /> */}
-                              <p></p>
-                            </>
-                          ))}
+                          <h6 className="fw-bold">{all.objectType}</h6>
+                          <p className="text-secondary">Title: {all.title}</p>
+                        </div>
+                        <hr />
+                        <div>
+                          <h6 className="fw-bold">Properties</h6>
+                          <p className="text-danger text-center">need help here!!!</p>
                         </div>
                       </div>
                     </div>
@@ -121,7 +111,9 @@ const AllMachine = () => {
           {show && (
             <>
               {category === null ? (
-                <><p>No thing day here yet</p></>
+                <>
+                  <p>No thing day here yet</p>
+                </>
               ) : (
                 <>
                   {category.map((item) => (
