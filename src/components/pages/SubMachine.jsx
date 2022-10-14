@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { InputField } from "../ui/atoms/InputField";
-import { useNavigate } from "react-router-dom";
 import Card from "../ui/molecules/Card";
 import { getStorageValue, useLocalStorage } from "../utils/memory";
 import { useParams } from "react-router-dom";
@@ -51,7 +49,7 @@ const SubMachine = () => {
                   onClick={() => setShow(!show)}
                   className="btn btn-success"
                 >
-                  Add Item{" "}
+                  Add Item
                 </button>
               </div>
             </div>
